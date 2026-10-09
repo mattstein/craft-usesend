@@ -1,0 +1,25 @@
+{% import '_includes/forms' as forms %}
+
+{{ forms.autosuggestField({
+    label: 'API Key'|t('usesend'),
+    instructions: 'A useSend API key with permission to send email.'|t('usesend'),
+    tip: 'Use an environment variable, such as `$USESEND_API_KEY`, to keep the key out of project config.'|t('usesend'),
+    id: 'apiKey',
+    name: 'apiKey',
+    suggestEnvVars: true,
+    value: adapter.apiKey,
+    required: true,
+    errors: adapter.getErrors('apiKey'),
+}) }}
+
+{{ forms.autosuggestField({
+    label: 'Base URL'|t('usesend'),
+    instructions: 'The root URL of your useSend instance. Keep the default for useSend Cloud.'|t('usesend'),
+    id: 'baseUrl',
+    name: 'baseUrl',
+    suggestEnvVars: true,
+    value: adapter.baseUrl,
+    placeholder: 'https://app.usesend.com',
+    required: true,
+    errors: adapter.getErrors('baseUrl'),
+}) }}
