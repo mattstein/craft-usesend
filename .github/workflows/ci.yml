@@ -1,0 +1,95 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { php: '8.2', dependencies: 'lowest' }
+          - { php: '8.2', dependencies: 'highest' }
+          - { php: '8.3', dependencies: 'highest' }
+          - { php: '8.4', dependencies: 'lowest' }
+          - { php: '8.4', dependencies: 'highest' }
+          - { php: '8.5', dependencies: 'highest' }
+
+    name: PHP ${{ matrix.php }} - ${{ matrix.dependencies }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: bcmath, curl, dom, intl, mbstring, pdo, zip
+          coverage: none
+
+      # Composer refuses Craft releases with known advisories by default, which
+      # would skip everything older than the newest patches. The lowest job
+      # installs them anyway, to test the oldest Craft 5 the plugin allows.
+      - name: Install lowest dependencies
+        if: matrix.dependencies == 'lowest'
+        run: composer update --prefer-lowest --prefer-stable --no-security-blocking --prefer-dist --no-interaction --no-progress
+
+      - name: Install dependencies
+        if: matrix.dependencies == 'highest'
+        run: composer update --prefer-stable --prefer-dist --no-interaction --no-progress
+
+      - name: Run tests
+        run: vendor/bin/pest
+
+  static-analysis:
+    runs-on: ubuntu-latest
+
+    name: Static analysis
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: bcmath, curl, dom, intl, mbstring, pdo, zip
+          coverage: none
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan --memory-limit=1G --no-progress
+
+  code-style:
+    runs-on: ubuntu-latest
+
+    name: Code style
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: bcmath, curl, dom, intl, mbstring, pdo, zip
+          coverage: none
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Check code style
+        run: vendor/bin/ecs check
