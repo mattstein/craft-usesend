@@ -1,0 +1,11 @@
+includes:
+    - vendor/craftcms/phpstan/phpstan.neon
+
+parameters:
+    level: max
+    paths:
+        - src
+        - tests
+    scanFiles:
+        - tests/Pest.php
+    tmpDir: build/phpstan

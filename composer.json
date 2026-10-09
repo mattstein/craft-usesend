@@ -1,0 +1,79 @@
+{
+    "name": "mattstein/craft-usesend",
+    "description": "Send Craft CMS email through the useSend API.",
+    "type": "craft-plugin",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "usesend",
+        "unsend",
+        "email",
+        "mail",
+        "transport",
+        "transactional-email"
+    ],
+    "homepage": "https://github.com/mattstein/craft-usesend",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matt Stein",
+            "email": "m@ttste.in",
+            "homepage": "https://mattstein.com"
+        }
+    ],
+    "support": {
+        "email": "m@ttste.in",
+        "issues": "https://github.com/mattstein/craft-usesend/issues?state=open",
+        "source": "https://github.com/mattstein/craft-usesend",
+        "docs": "https://github.com/mattstein/craft-usesend",
+        "rss": "https://github.com/mattstein/craft-usesend/releases.atom"
+    },
+    "require": {
+        "php": "^8.2",
+        "craftcms/cms": "^5.0.0",
+        "guzzlehttp/guzzle": "^7.2",
+        "symfony/mailer": "^6.4|^7.0",
+        "symfony/mime": "^6.4|^7.0"
+    },
+    "require-dev": {
+        "craftcms/ecs": "dev-main",
+        "craftcms/phpstan": "dev-main",
+        "pestphp/pest": "^3.0|^4.0",
+        "phpstan/phpstan": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "mattstein\\usesend\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "mattstein\\usesend\\tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "handle": "usesend",
+        "name": "useSend",
+        "developer": "Matt Stein",
+        "documentationUrl": "https://github.com/mattstein/craft-usesend",
+        "class": "mattstein\\usesend\\Plugin"
+    },
+    "scripts": {
+        "test": "pest",
+        "check-cs": "ecs check --ansi",
+        "fix-cs": "ecs check --ansi --fix",
+        "phpstan": "phpstan --memory-limit=1G"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "craftcms/plugin-installer": true,
+            "pestphp/pest-plugin": true,
+            "yiisoft/yii2-composer": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
